@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    skip_before_action :authorized, only: [:create]
+
     def index
         @users = User.all 
         render json: @users   
@@ -11,12 +11,11 @@ class UsersController < ApplicationController
     end
 
     def create
-        @user = User.new(user_params)
-        # byebug
+        @user = User.create!({username: params[:username], email: params[:email], password: params[:password]})  
         if @user.valid?
-            @user.save
-            @token = encode_token(@user)
-            render json: { user: @user, jwt: @token }
+            # @user.save
+            @token = JWT.encode({id: @user.id}, "let's tell a story")
+            render json: { user: @user, token: @token }
         else
             render json: { error: 'failed to create user' }, status: :not_acceptable
         end
@@ -27,6 +26,22 @@ class UsersController < ApplicationController
         render json: @user, status: 200 
     end 
 
+    def log_in
+        user = User.find_by(username: params[:username])
+        # byebug
+        if (user && user.authenticate(params[:password])) 
+            # byebug
+            token = JWT.encode({id: user.id}, "let's tell a story")
+            render json: {user: user, token: token}
+        else 
+            render json: {error: true, message: "invalid credintials"}
+        end 
+    end 
+
+    def get_user 
+        user = self.current_user
+        render json: user
+    end 
 
     def update 
     end 
@@ -35,6 +50,6 @@ class UsersController < ApplicationController
 
     def user_params 
         # byebug
-        params.require(:user).permit(:username, :email, :password_digest)
+        params.require(:user).permit(:username, :password, :email)
     end 
 end
