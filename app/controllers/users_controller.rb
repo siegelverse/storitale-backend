@@ -49,6 +49,6 @@ class UsersController < ApplicationController
 
     def user_params 
         # byebug
-        params.require(:user).permit(:username, :password, :email)
+        params.require(:user).permit(:username, :password, :email, :bio, :image)
     end 
 end

@@ -1,7 +1,5 @@
 class StorySerializer < ActiveModel::Serializer
-  attributes :id, :title, :body, :location
+  attributes :id, :title, :body, :favorites_count
   has_many :reviews
-  has_many :likes
   belongs_to :user
-  belongs_to :genre
 end
