@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2020_11_27_001927) do
   create_table "stories", force: :cascade do |t|
     t.string "title"
     t.text "body"
+    t.string "description"
     t.integer "favorites_count"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false

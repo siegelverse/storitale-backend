@@ -27,7 +27,7 @@ gem 'rack-cors'
 
 gem 'active_model_serializers'
 
-gem 'jwt'
+gem 'jwt', '~> 2.2'
 
 gem 'acts-as-taggable-on'
 

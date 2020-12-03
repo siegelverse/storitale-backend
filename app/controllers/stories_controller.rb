@@ -1,4 +1,5 @@
 class StoriesController < ApplicationController
+    skip_before_action :authorized
     def index
         @stories = Story.all 
         @stories = @stories.tagged_with(params[:tag]) if params[:tag].present?
@@ -10,7 +11,7 @@ class StoriesController < ApplicationController
     end 
 
     def show 
-        @story = Story.find(story_params)
+        @story = Story.find_by(id: params[:id])
         render json: @story, status: 200 
     end 
 
@@ -20,11 +21,21 @@ class StoriesController < ApplicationController
     end 
 
     def update 
+        @story = Story.find(story_params)
+        @story.update(story_params)
+        render json: @story
+    end 
+
+    def destroy
+        @story = Story.find_by(id: params[:id])
+        @story.delete 
+
+        render json: {}
     end 
 
     private 
 
     def story_params 
-        params.require(:story).permit(:title, :body, :user_id, tag_list: [])
+        params.require(:story).permit(:title, :body, :description, :user_id, tag_list: [])
     end 
 end

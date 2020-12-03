@@ -1,6 +1,8 @@
 class ReviewsController < ApplicationController
+    before_action :find_story
+    skip_before_action :authorized
     def index
-        @reviews = @story.reviews.order(created_at: :desc) 
+        @reviews = find_story.reviews.order(created_at: :desc) 
         render json: @reviews   
     end 
 
@@ -10,10 +12,9 @@ class ReviewsController < ApplicationController
     end 
 
     def create
-        @review = @story.reviews.new(review_params)
-        @review.user = current_user
-    
-        render json: { errors: @review.errors }, status: :unprocessable_entity unless @review.save
+        @review = find_story.reviews.create(review_params)
+        # @review.user = current_user
+        redirect_to action: "index"
     end 
 
     def update 
@@ -32,8 +33,9 @@ class ReviewsController < ApplicationController
 
     private 
 
-    def find_story!
-        @story = Story.find_by(id: params[:id])
+    def find_story
+        # byebug
+        @story = Story.find_by(id: params[:story_id])
     end
 
     def review_params 

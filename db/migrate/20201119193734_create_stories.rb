@@ -3,6 +3,7 @@ class CreateStories < ActiveRecord::Migration[6.0]
     create_table :stories do |t|
       t.string :title
       t.text :body
+      t.string :description
       t.integer :favorites_count
       t.integer :user_id
 
